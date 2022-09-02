@@ -18,60 +18,34 @@ function App() {
   const [result,setResult]=useState(0);
   const nextId = useRef(0);
   
-  useEffect(() => {
-    const fetchData = async () => {
-     // setIsError(false);
-     // setIsLoading(true);
-     console.log("fetchData")
-      try {
-        const response = await axios({
-          url: 'https://aae2-218-232-197-126.jp.ngrok.io/predict',
-          method: 'post',
-          data: {
-            "sentence" : message
-          }
-        }); //클래스에서 사용하는 stock가져와야함
-        setResult(response.data);
-      } catch (error) {
-       // setIsError(true);
-      }
-      //setIsLoading(false);
-    };
-    console.log("fetchData result", result)
-
-    fetchData();
-    return () => { };
-  }, [nextId.current]);
- 
   const getPredict = async () => {
-    await axios({
+    const result=await axios({
       url: 'https://aae2-218-232-197-126.jp.ngrok.io/predict',
       method: 'post',
       data: {
         "sentence" : message
       }
     })
-    .then(function a(response) { 
-      console.log("response",response.data)
-      setResult(response)
-    })
-    .catch(function (error) {
-      console.log("error",error);
-    });
+    if(result.status==200){
+      console.log(result.data);
+      
+      const post={
+        'id':nextId.current,
+        'message':message,
+        'result': result.data
+      }
+      nextId.current += 1;
+
+      console.log(">>>",post)
+      setMessages(messages=>([...messages,post]));
+    }else{
+      //error 처리
+    }
   };
 
   
   const  onCreate = () => {
-    nextId.current += 1;
-        
-    const post={
-      'id':nextId.current,
-      'message':message,
-      'result': result.data
-    }
-
-    console.log(post)
-    setMessages(messages=>([...messages,post]));
+    getPredict();
   };
   
  
