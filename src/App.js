@@ -10,7 +10,6 @@ import axios from "axios"
 
 
 
-
 function App() {
 
   const [message, setMessage] = useState('');
@@ -20,7 +19,7 @@ function App() {
   
   const getPredict = async () => {
     const result=await axios({
-      url: 'https://aae2-218-232-197-126.jp.ngrok.io/predict',
+      url: '/predict',
       method: 'post',
       data: {
         "sentence" : message
